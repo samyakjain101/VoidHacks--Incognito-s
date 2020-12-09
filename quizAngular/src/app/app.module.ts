@@ -1,3 +1,5 @@
+import { CreateQuizService } from './services/create-quiz.service';
+import { DataService } from './services/data.service';
 import { AppErrorHandler } from './common/app-error-handler';
 import { AdminAuthGuard } from './services/admin-auth-guard.service';
 import { AuthGuard } from './services/auth-guard.service';
@@ -14,6 +16,7 @@ import { HomeComponent } from './home/home.component';
 import { AdminComponent } from './admin/admin.component';
 import { NoAccessComponent } from './no-access/no-access.component';
 import { RegisterComponent } from './register/register.component';
+import { CreateQuizComponent } from './create-quiz/create-quiz.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +25,8 @@ import { RegisterComponent } from './register/register.component';
     HomeComponent,
     AdminComponent,
     NoAccessComponent,
-    RegisterComponent
+    RegisterComponent,
+    CreateQuizComponent
   ],
   imports: [
     BrowserModule,
@@ -52,9 +56,15 @@ import { RegisterComponent } from './register/register.component';
         component: AdminComponent,
         canActivate: [AuthGuard, AdminAuthGuard]
       },
+      {
+        path: 'create-quiz',
+        component: CreateQuizComponent,
+        canActivate: [AuthGuard, AdminAuthGuard]
+      },
     ])
   ],
   providers: [
+    CreateQuizService,
     AuthGuard,
     AdminAuthGuard,
     { provide: ErrorHandler, useClass: AppErrorHandler }

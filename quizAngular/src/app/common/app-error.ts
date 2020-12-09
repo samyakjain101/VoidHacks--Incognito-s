@@ -1,5 +1,5 @@
 export class AppError {
-    constructor(public originalError?: any) {
-        // alert('Something went wrong.')
+    constructor(public originalError?: any){
+        
     }
 }
