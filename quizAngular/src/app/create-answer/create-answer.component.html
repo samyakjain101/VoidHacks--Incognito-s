@@ -1,1 +1,90 @@
-<p>create-answer works!</p>
+<div class="container w-50">
+    <form [formGroup]="form" (submit)="createAnswer()">
+        <div class="form-group">
+            <label for="question">
+                Question
+            </label>
+            <input formControlName="question" type="text" name="question" class="form-control">
+            <div *ngIf="question?.touched && question?.invalid" class="alert alert-danger">
+                <div *ngIf="question?.errors?.required">
+                    Question is required.
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="form-group">
+            <label for="choice1bool">
+                Choice1
+            </label>
+            <input formControlName="choice1bool" type="text" name="choice1bool" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="choice1">
+                Choice1
+            </label>
+            <input formControlName="choice1" type="text" name="choice1" class="form-control">
+            <div *ngIf="choice1?.touched && choice1?.invalid" class="alert alert-danger">
+                <div *ngIf="choice1?.errors?.required">
+                    Choice1 is required.
+                </div>
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label for="choice2bool">
+                Choice2
+            </label>
+            <input formControlName="choice2bool" type="text" name="choice2bool" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="choice2">
+                Choice2
+            </label>
+            <input formControlName="choice2" type="text" name="choice2" class="form-control">
+            <div *ngIf="choice2?.touched && choice2?.invalid" class="alert alert-danger">
+                <div *ngIf="choice2?.errors?.required">
+                    Choice2 is required.
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="choice3bool">
+                Choice2
+            </label>
+            <input formControlName="choice3bool" type="text" name="choice3bool" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="choice3">
+                Choice2
+            </label>
+            <input formControlName="choice3" type="text" name="choice3" class="form-control">
+            <div *ngIf="choice3?.touched && choice3?.invalid" class="alert alert-danger">
+                <div *ngIf="choice3?.errors?.required">
+                    Choice2 is required.
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="choice4bool">
+                Choice2
+            </label>
+            <input formControlName="choice4bool" type="text" name="choice4bool" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="choice4">
+                Choice2
+            </label>
+            <input formControlName="choice4" type="text" name="choice4" class="form-control">
+            <div *ngIf="choice4?.touched && choice4?.invalid" class="alert alert-danger">
+                <div *ngIf="choice4?.errors?.required">
+                    Choice2 is required.
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Register</button>
+    </form>
+</div>
