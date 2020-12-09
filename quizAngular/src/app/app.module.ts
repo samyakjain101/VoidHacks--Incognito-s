@@ -14,6 +14,8 @@ import { HomeComponent } from './home/home.component';
 import { AdminComponent } from './admin/admin.component';
 import { NoAccessComponent } from './no-access/no-access.component';
 import { RegisterComponent } from './register/register.component';
+import { QuizdetailComponent } from './quizdetail/quizdetail.component';
+import { QuizquestionsComponent } from './quizquestions/quizquestions.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +24,9 @@ import { RegisterComponent } from './register/register.component';
     HomeComponent,
     AdminComponent,
     NoAccessComponent,
-    RegisterComponent
+    RegisterComponent,
+    QuizdetailComponent,
+    QuizquestionsComponent
   ],
   imports: [
     BrowserModule,
@@ -42,6 +46,14 @@ import { RegisterComponent } from './register/register.component';
       {
         path: 'register',
         component: RegisterComponent
+      },
+      {
+        path: 'quiz-details',
+        component: QuizdetailComponent
+      },
+      {
+        path: 'quiz-questions',
+        component: QuizquestionsComponent
       },
       {
         path: 'no-access',
