@@ -10,10 +10,10 @@ import { catchError, map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class AuthService {
-  // private login_url = 'http://127.0.0.1:8000/api/login/'
-  // private logout_url = 'http://127.0.0.1:8000/api/logout/'
-  private login_url = 'http://192.168.225.24:8000/api/login/'
-  private logout_url = 'http://192.168.225.24:8000/api/logout/'
+  private login_url = 'http://127.0.0.1:8000/api/login/'
+  private logout_url = 'http://127.0.0.1:8000/api/logout/'
+  // private login_url = 'http://192.168.225.24:8000/api/login/'
+  // private logout_url = 'http://192.168.225.24:8000/api/logout/'
 
   constructor(private http: HttpClient) { }
 
