@@ -81,3 +81,9 @@ def api_add_mcq_view(request):
         return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
     
+@api_view(['GET'])
+def create_answer_view(request):
+    if request.method == 'GET':
+        quizzes = Quiz.objects.all()
+        serializer = QuizSerializer(quizzes, many=True)
+        return Response(serializer.data)
