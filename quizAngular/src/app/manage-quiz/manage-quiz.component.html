@@ -1,4 +1,4 @@
 <ul *ngIf="quizzes">
-    <li *ngFor="let quiz of quizzes">{{ quiz }}</li>
+    <li *ngFor="let quiz of quizzes">{{ quiz.title }}</li>
 </ul>
 <p *ngIf="!quizzes">Quizzes not found</p>
