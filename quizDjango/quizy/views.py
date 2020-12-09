@@ -11,7 +11,7 @@ from rest_framework.decorators import api_view
 
 # from account.models import Account
 from quizy.models import Quiz
-from quizy.api.serializers import QuizSerializer
+from quizy.serializers import QuizSerializer
 
 SUCCESS = 'success'
 ERROR = 'error'

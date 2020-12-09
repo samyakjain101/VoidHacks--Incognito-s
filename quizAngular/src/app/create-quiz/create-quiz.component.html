@@ -23,9 +23,9 @@
             <label for="start-date">
                 Start Date
             </label>
-            <input formControlName="startDate" type="date" name="start-date" class="form-control">
-            <div *ngIf="startDate?.touched && startDate?.invalid" class="alert alert-danger">
-                <div *ngIf="startDate?.errors?.required">
+            <input formControlName="start_date" type="datetime-local" name="start-date" class="form-control">
+            <div *ngIf="start_date?.touched && start_date?.invalid" class="alert alert-danger">
+                <div *ngIf="start_date?.errors?.required">
                     Start Date is required.
                 </div>
             </div>
@@ -34,9 +34,9 @@
             <label for="end-date">
                 End Date
             </label>
-            <input formControlName="endDate" type="date" name="end-date" class="form-control">
-            <div *ngIf="endDate?.touched && endDate?.invalid" class="alert alert-danger">
-                <div *ngIf="endDate?.errors?.required">
+            <input formControlName="end_date" type="datetime-local" name="end-date" class="form-control">
+            <div *ngIf="end_date?.touched &&end_date?.invalid" class="alert alert-danger">
+                <div *ngIf="end_date?.errors?.required">
                     End Date is required.
                 </div>
             </div>

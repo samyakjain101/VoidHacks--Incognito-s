@@ -2,4 +2,6 @@ quizDjango/auth_django/__pycache__
 quizDjango/auth_django/migrations
 quizDjango/quizDjango/__pycache__
 quizDjango/quizDjango/migrations
+quizDjango/quizy/__pycache__
+quizDjango/quizy/migrations
 db.sqlite3

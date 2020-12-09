@@ -14,13 +14,13 @@ export class DataService {
             .pipe( catchError(this.handleError) );
     }
     create(resource: any) {
-        return this.http.post(this.url, JSON.stringify(resource))
+        return this.http.post(this.url, resource)
             .pipe(
                 catchError(this.handleError)
             );
     }
     update(resource: any) {
-        return this.http.patch(this.url + '/' + resource.id, JSON.stringify({ isRead: true }))
+        return this.http.patch(this.url + '/' + resource.id, { isRead: true })
             .pipe(
                 catchError(this.handleError)
             )
