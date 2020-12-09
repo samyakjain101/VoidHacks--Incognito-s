@@ -1,5 +1,5 @@
+import { CreateQuizComponent } from './create-quiz/create-quiz.component';
 import { CreateQuizService } from './services/create-quiz.service';
-import { DataService } from './services/data.service';
 import { AppErrorHandler } from './common/app-error-handler';
 import { AdminAuthGuard } from './services/admin-auth-guard.service';
 import { AuthGuard } from './services/auth-guard.service';
@@ -16,7 +16,9 @@ import { HomeComponent } from './home/home.component';
 import { AdminComponent } from './admin/admin.component';
 import { NoAccessComponent } from './no-access/no-access.component';
 import { RegisterComponent } from './register/register.component';
-import { CreateQuizComponent } from './create-quiz/create-quiz.component';
+import { QuizdetailComponent } from './quizdetail/quizdetail.component';
+import { QuizquestionsComponent } from './quizquestions/quizquestions.component';
+import { CreateAnswerComponent } from './create-answer/create-answer.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +28,10 @@ import { CreateQuizComponent } from './create-quiz/create-quiz.component';
     AdminComponent,
     NoAccessComponent,
     RegisterComponent,
-    CreateQuizComponent
+    QuizdetailComponent,
+    QuizquestionsComponent,
+    CreateQuizComponent,
+    CreateAnswerComponent
   ],
   imports: [
     BrowserModule,
@@ -46,6 +51,14 @@ import { CreateQuizComponent } from './create-quiz/create-quiz.component';
       {
         path: 'register',
         component: RegisterComponent
+      },
+      {
+        path: 'quiz-details',
+        component: QuizdetailComponent
+      },
+      {
+        path: 'quiz-questions',
+        component: QuizquestionsComponent
       },
       {
         path: 'no-access',

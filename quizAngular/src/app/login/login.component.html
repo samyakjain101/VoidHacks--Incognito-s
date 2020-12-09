@@ -1,35 +1,28 @@
-<div class="container w-25">
-    <form 
-        #f="ngForm" 
-        (submit)="login(f.value)">
-        <div  
-            *ngIf="invalidLogin"
-            class="alert alert-danger">Invalid credentinals.
-        </div>
-        <div class="form-group">
-            <label for="username">
-                Username:
-            </label>
-            <input
-                ngModel
-                required
-                #username="ngModel"
-                type="text" 
-                name="username" 
-                class="form-control">
-    
-            <label for="password">
-                Password:
-            </label>
-            <input 
-                ngModel
-                required
-                #password="ngModel"
-                type="password" 
-                name="password" 
-                class="form-control">
-        </div>
-    
-        <input type="submit" value="Login" class="btn btn-primary">
-    </form>
+<div class="container log-form">
+  <h2>Login</h2>
+  <form #f="ngForm" (submit)="login(f.value)">
+    <div *ngIf="invalidLogin" class="alert alert-danger">
+      Invalid credentinals.
+    </div>
+    <div class="form-group">
+      <input
+        ngModel
+        required
+        #username="ngModel"
+        type="text"
+        placeholder="username"
+        class="form-control"
+      />
+      <input
+        ngModel
+        required
+        #password="ngModel"
+        type="password"
+        placeholder="password"
+        class="form-control"
+      />
+    </div>
+
+    <button type="submit" class="btn">Login</button>
+  </form>
 </div>
