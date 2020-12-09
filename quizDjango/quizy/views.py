@@ -14,8 +14,33 @@ from django.utils import timezone
 from django.conf import settings
 from .models import *
 
-# Create your views here.
+# new import
+from .forms import *
 
+# new views
+
+def create_quiz(request):
+
+	context = {}
+
+	user = request.user
+	if not user.is_authenticated:
+		return redirect('must_authenticate')
+
+	form = CreateQuizForm(request.POST or None, request.FILES or None)
+	if form.is_valid():
+		obj = form.save(commit=False)
+		# author = Account.objects.filter(email=user.email).first()
+		# obj.author = author
+		obj.save()
+		form = CreateQuizForm()
+
+	context['form'] = form
+
+	return render(request, "quizy/create_quiz.html", context)
+
+
+# Past Views.
 class AvailableQuiz(LoginRequiredMixin ,TemplateView):
     template_name = "quiz_app/available_quiz.html"
     def get_context_data(self, **kwargs):
@@ -25,6 +50,7 @@ class AvailableQuiz(LoginRequiredMixin ,TemplateView):
             'quizzes' : quizzes
         }
         return context
+
 
 @login_required
 def attempt_quiz(request, **kwargs):
