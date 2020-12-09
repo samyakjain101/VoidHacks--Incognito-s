@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'knox',
     'corsheaders',
-    'auth_django'
+    'auth_django',
+    'quizy'
 ]
 
 MIDDLEWARE = [
