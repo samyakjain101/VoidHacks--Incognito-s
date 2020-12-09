@@ -6,6 +6,9 @@
         <a routerLink="/admin">Admin</a>
     </li>
     <li *ngIf="isLoggedIn()"> 
+        <a routerLink="/manage-quiz">Manage Quiz</a>
+    </li>
+    <li *ngIf="isLoggedIn()"> 
         <a routerLink="/create-quiz">Create Quiz</a>
     </li>
     <li *ngIf="!isLoggedIn()">

@@ -19,6 +19,7 @@ import { RegisterComponent } from './register/register.component';
 import { QuizdetailComponent } from './quizdetail/quizdetail.component';
 import { QuizquestionsComponent } from './quizquestions/quizquestions.component';
 import { CreateAnswerComponent } from './create-answer/create-answer.component';
+import { ManageQuizComponent } from './manage-quiz/manage-quiz.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { CreateAnswerComponent } from './create-answer/create-answer.component';
     QuizdetailComponent,
     QuizquestionsComponent,
     CreateQuizComponent,
-    CreateAnswerComponent
+    CreateAnswerComponent,
+    ManageQuizComponent
   ],
   imports: [
     BrowserModule,
@@ -72,6 +74,11 @@ import { CreateAnswerComponent } from './create-answer/create-answer.component';
       {
         path: 'create-quiz',
         component: CreateQuizComponent,
+        canActivate: [AuthGuard, AdminAuthGuard]
+      },
+      {
+        path: 'manage-quiz',
+        component: ManageQuizComponent,
         canActivate: [AuthGuard, AdminAuthGuard]
       },
     ])
