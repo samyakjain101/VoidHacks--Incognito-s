@@ -1,0 +1,5 @@
+quizDjango/auth_django/__pycache__
+quizDjango/auth_django/migrations
+quizDjango/quizDjango/__pycache__
+quizDjango/quizDjango/migrations
+db.sqlite3
