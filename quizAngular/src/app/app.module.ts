@@ -81,6 +81,11 @@ import { ManageQuizComponent } from './manage-quiz/manage-quiz.component';
         component: ManageQuizComponent,
         canActivate: [AuthGuard, AdminAuthGuard]
       },
+      {
+        path: 'create-answer',
+        component: CreateAnswerComponent,
+        canActivate: [AuthGuard, AdminAuthGuard]
+      },
     ])
   ],
   providers: [

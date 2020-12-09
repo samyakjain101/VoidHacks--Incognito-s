@@ -1,4 +1,23 @@
+<div class="container">
+<h1 class="text-center m-5">Available quizes</h1>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th>Quiz Name</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th class="row">1</th>
+      <th>Matrix Operations</th>
+      <th><a href="">Edit</a></th>
+    </tr>
+  </tbody>
+</table>
 <ul *ngIf="quizzes">
-    <li *ngFor="let quiz of quizzes">{{ quiz.title }}</li>
+  <li *ngFor="let quiz of quizzes">{{ quiz.title }}</li>
 </ul>
 <p *ngIf="!quizzes">Quizzes not found</p>
+</div>
