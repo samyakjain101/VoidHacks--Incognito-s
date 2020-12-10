@@ -334,11 +334,17 @@ class SendUsers(APIView):
     def post(self, request, format=None):
 
         try:
+            # print(request)
             data = JSONParser().parse(request)
+            print(99999999999999999)
             print(data)
-            print(data["listOfIds"])
 
-            lst = data["listOfIds"]
+            
+            lst = []
+            for x in data["users"]:
+                lst.append(x["id"])
+                # print(x) ## return the django model class object
+
             try:
                 quiz_id = uuid.UUID(data["quiz_id"]).hex
             except ValueError:
@@ -354,7 +360,7 @@ class SendUsers(APIView):
                 token = Token.objects.get_or_create(user=User.objects.get(id=usr))
                 # print(token.key)
             
-            print(data["listOfIds"])
+            # print(data["listOfIds"])
             for usr in lst:
                 message = '{} invited you to give {} Quiz on Quizy. Go to http://192.168.225.24:4200/{}/{}/ to start.'.format(
                     request.user.username,
