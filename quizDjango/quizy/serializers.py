@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from .models import Quiz, QuizAnswerRecord, Question
-
+from django.contrib.auth.models import User
 
 class QuizSerializer(serializers.ModelSerializer):
 	class Meta:
@@ -18,3 +18,7 @@ class AllQuesSerializer(serializers.ModelSerializer):
 		model = Question
 		fields = ['question']
 
+class UserSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = User
+		fields = ['first_name','last_name','email','username']

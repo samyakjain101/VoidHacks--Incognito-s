@@ -1,7 +1,7 @@
 import { BadRequest } from './../common/bad-request';
 import { AppError } from './../common/app-error';
 import { CreateAnswerService } from './../services/create-answer.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 
@@ -10,50 +10,49 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './create-answer.component.html',
   styleUrls: ['./create-answer.component.css']
 })
-export class CreateAnswerComponent {
+export class CreateAnswerComponent implements OnInit{
   form: FormGroup;
+  quizId:any;
+  quizName:any;
 
   constructor(fb: FormBuilder,
     private CreateAnswerService: CreateAnswerService,
-    private router: Router) {
+    private router: Router,
+    private route: ActivatedRoute) {
     this.form = fb.group({
       question: ['', Validators.required],
-      
-      choice1bool: ['',],
+    
       choice1: ['', Validators.required],
-
-      choice2bool: ['',],
       choice2: ['', Validators.required],
-
-      choice3bool: ['',],
       choice3: ['', Validators.required],
-
-      choice4bool: ['',],
       choice4: ['', Validators.required],
+
+      choice: ['', Validators.required],
+      quiz_id: ['',]
     })
   }
+  ngOnInit(): void {
+    this.quizId = this.route.snapshot.params.quizId;
+    this.quizName = this.route.snapshot.params.name;
+  }
+
 
   get question() { return this.form.get('question'); }
-
-  get choice1bool() { return this.form.get('choice1bool'); }
   get choice1() { return this.form.get('choice1'); }
-
-  get choice2bool() { return this.form.get('choice2bool'); }
   get choice2() { return this.form.get('choice2'); }
-
-  get choice3bool() { return this.form.get('choice3bool'); }
   get choice3() { return this.form.get('choice3'); }
-
-  get choice4bool() { return this.form.get('choice4bool'); }
   get choice4() { return this.form.get('choice4'); }
 
   addQuestion() {
+    console.log(this.form.value.choice);
+    this.form.value.quiz_id=this.quizId;
+    
     if (this.form.valid) {
-      console.log(this.form.value);
+      console.log(this.form.value.quiz_id);
       this.CreateAnswerService.create(this.form.value)
         .subscribe(result => {
           if (result) {
-            // this.router.navigate(['login']);
+            this.router.navigate(['add-question',this.quizId, this.quizName]);
             console.log('success');
           }
           else
