@@ -177,13 +177,39 @@ class AttempQuiz(APIView):
                             quiz_record.viewed = True
                             quiz_record.save()
 
-                            unViewed = list( Choice.objects.all().filter(question=currQue) )
-                            unViewed.append(currQue)
-                            unViewed.append(timeLeftInSec)
-                            json_unViewed = serializers.serialize('json', unViewed, use_natural_foreign_keys=True, use_natural_primary_keys=True)
-
-                            # serializer = QueRecordSerializer(currQue)
-                            return Response(json_unViewed.data, status=status.HTTP_201_CREATED)
+                            choices = Choice.objects.all().filter(question=currQue)
+                            # unViewed.append(currQue)
+                            # unViewed.append(timeLeftInSec)
+                            ans = [
+                                    {
+                                        "timeLeftInSec" : timeLeftInSec,
+                                    },
+                                    {
+                                        "question" : currQue.question,
+                                        "ques_id" : currQue.id
+                                    },
+                                    {
+                                        "id": choices[0].id,
+                                        "choice": choices[0].choice,
+                                        "is_correct": choices[0].is_correct
+                                    },
+                                    {
+                                        "id": choices[1].id,
+                                        "choice": choices[1].choice,
+                                        "is_correct": choices[1].is_correct
+                                    },
+                                    {
+                                        "id": choices[2].id,
+                                        "choice": choices[2].choice,
+                                        "is_correct": choices[2].is_correct
+                                    },
+                                    {
+                                        "id": choices[3].id,
+                                        "choice": choices[3].choice,
+                                        "is_correct": choices[3].is_correct
+                                    },
+                                ]
+                            return Response(ans, status=status.HTTP_201_CREATED)
                         except:
                             return Response("{}", status=status.HTTP_201_CREATED)
                     else:
