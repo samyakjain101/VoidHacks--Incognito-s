@@ -14,5 +14,4 @@ export class AdminComponent implements OnInit {
     this.service.getAll()
       .subscribe(users => this.users = users);
   }
-
 }

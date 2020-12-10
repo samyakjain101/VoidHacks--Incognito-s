@@ -23,6 +23,7 @@ import { CreateAnswerComponent } from './create-answer/create-answer.component';
 import { ManageQuizComponent } from './manage-quiz/manage-quiz.component';
 import { EditQuizComponent } from './edit-quiz/edit-quiz.component';
 import { InviteUsersComponent } from './invite-users/invite-users.component';
+import { ResultComponent } from './result/result.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { InviteUsersComponent } from './invite-users/invite-users.component';
     CreateAnswerComponent,
     ManageQuizComponent,
     EditQuizComponent,
-    InviteUsersComponent
+    InviteUsersComponent,
+    ResultComponent
   ],
   imports: [
     BrowserModule,
@@ -48,10 +50,6 @@ import { InviteUsersComponent } from './invite-users/invite-users.component';
     ReactiveFormsModule,
     CountdownModule,
     RouterModule.forRoot([
-      {
-        path: '',
-        component: HomeComponent
-      },
       {
         path: 'login',
         component: LoginComponent

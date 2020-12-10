@@ -1,3 +1,4 @@
+import { GetAllUsersService } from './../services/get-all-users.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -7,9 +8,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class InviteUsersComponent implements OnInit {
 
-  constructor() { }
+  users: any;
+  constructor(private service: GetAllUsersService) { }
 
   ngOnInit(): void {
+    this.service.getAll()
+      .subscribe(users => this.users = users);
   }
-
 }
