@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Quiz, QuizAnswerRecord
+from .models import Quiz, QuizAnswerRecord, Question
 
 
 class QuizSerializer(serializers.ModelSerializer):
@@ -12,3 +12,9 @@ class QueRecordSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = QuizAnswerRecord
 		fields = ['record','question','myAns','viewed']
+
+class AllQuesSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Question
+		fields = ['question']
+
