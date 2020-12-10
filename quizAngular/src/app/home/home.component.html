@@ -15,7 +15,7 @@
     <div class="nav-links">
       <a routerLink="">Home</a>
       <a *ngIf="isLoggedIn()" routerLink="/admin">Admin</a>
-      <a routerLink="/result">Results</a>
+      <a routerLink="/results">Results</a>
       <a *ngIf="!isLoggedIn()" routerLink="/login">Login</a>
       <a *ngIf="isLoggedIn()" (click)="logout()">Logout</a>
     </div>

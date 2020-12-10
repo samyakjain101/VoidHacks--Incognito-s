@@ -24,6 +24,7 @@ import { ManageQuizComponent } from './manage-quiz/manage-quiz.component';
 import { EditQuizComponent } from './edit-quiz/edit-quiz.component';
 import { InviteUsersComponent } from './invite-users/invite-users.component';
 import { ResultComponent } from './result/result.component';
+import { ResultsComponent } from './results/results.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { ResultComponent } from './result/result.component';
     ManageQuizComponent,
     EditQuizComponent,
     InviteUsersComponent,
-    ResultComponent
+    ResultComponent,
+    ResultsComponent
   ],
   imports: [
     BrowserModule,
@@ -78,6 +80,11 @@ import { ResultComponent } from './result/result.component';
       {
         path: 'result',
         component: ResultComponent,
+        canActivate: [AuthGuard, AdminAuthGuard]
+      },
+      {
+        path: 'results',
+        component: ResultsComponent,
         canActivate: [AuthGuard, AdminAuthGuard]
       },
       {
