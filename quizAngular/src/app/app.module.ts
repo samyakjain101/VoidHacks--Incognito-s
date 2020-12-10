@@ -89,7 +89,7 @@ import { EditQuizComponent } from './edit-quiz/edit-quiz.component';
         canActivate: [AuthGuard, AdminAuthGuard]
       },
       {
-        path: 'edit-quiz/:quizId',
+        path: 'edit-quiz/:quizId/:name',
         component: EditQuizComponent,
         canActivate: [AuthGuard, AdminAuthGuard]
       },

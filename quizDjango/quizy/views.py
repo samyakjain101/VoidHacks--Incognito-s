@@ -83,22 +83,9 @@ def create_answer_view(request):
         serializer = QuizSerializer(quizzes, many=True)
         return Response(serializer.data)
 
-<<<<<<< HEAD
-@api_view(['GET'])
-def get_all_ques(request):
-    # Quuid = request.GET.get("quiz_id")
-    data = JSONParser().parse(request)
-    Quuid = data['quiz_id']
-
-    try:
-        quiz_id = uuid.UUID(Quuid).hex
-    except ValueError:
-        return Response("id value error", status=status.HTTP_400_BAD_REQUEST)
-=======
-class IsLoggedInView(APIView):
+class GetAllQue(APIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
->>>>>>> 1fc1aa064b9c9fa9c91b362ad280b57a0ac0c5e0
 
     def get(self, request, format=None):
         Quuid = request.GET.get("quiz_id")
@@ -108,12 +95,6 @@ class IsLoggedInView(APIView):
         except ValueError:
             return Response("id value error", status=status.HTTP_400_BAD_REQUEST)
 
-<<<<<<< HEAD
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from knox.auth import TokenAuthentication
-=======
         try: 
             quiz = Quiz.objects.get(id = quiz_id)
         except Quiz.DoesNotExist:
@@ -122,7 +103,6 @@ from knox.auth import TokenAuthentication
         ques = Question.objects.all()
         serializer = AllQuesSerializer(ques, many=True)
         return Response(serializer.data)    
->>>>>>> 1fc1aa064b9c9fa9c91b362ad280b57a0ac0c5e0
 
 class AttempQuiz(APIView):
     authentication_classes = (TokenAuthentication,)

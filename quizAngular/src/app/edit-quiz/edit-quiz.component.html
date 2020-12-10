@@ -1,6 +1,6 @@
 <div class="container">
   <div class="text-center">
-    <h1 class="m-5">Editing (quiz name)</h1>
+    <h1 class="m-5">Editing ({{quizName}})</h1>
     <button class="btn btn-info m-3 mx-auto text-center">Add more +</button>
   </div>
     <table class="table">
@@ -13,9 +13,9 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
+        <tr *ngFor="let question of questions">
           <th class="row">1</th>
-          <th>What is the name?</th>
+          <th>{{ question.question }}</th>
           <th><a>Edit</a></th>
           <th><a>Delete</a></th>
         </tr>
