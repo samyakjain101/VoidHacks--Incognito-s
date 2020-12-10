@@ -1,3 +1,4 @@
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { AttemptQuizService } from './../services/attempt-quiz.service';
 import { ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
@@ -13,15 +14,22 @@ export class QuizquestionsComponent implements OnInit {
   question: any;
   choiceId: any;
   todo: any = false;
-  constructor(
+  timeLeft: any;
+  form: FormGroup;
+
+  constructor(fb: FormBuilder,
     private route: ActivatedRoute,
-    private service: AttemptQuizService) { }
+    private service: AttemptQuizService) {
+    this.form = fb.group({
+      ques_id: ['',],
+      choice_id: ['', Validators.required],
+      quiz_id: ['',],
+      todo: ['',]
+    })
+    }
 
   ngOnInit(): void {
-    if (true) {
-      this.todo = true
-    }
-    this.quizId = this.route.snapshot.params.quizId;
+    this.quizId = this.route.snapshot.params.quiz_id;
     this.token = this.route.snapshot.params.token;
     this.service.create({
       quiz_id: this.quizId,
@@ -29,7 +37,26 @@ export class QuizquestionsComponent implements OnInit {
       ques_id: this.question?.id,
       choice_id: this.choiceId
     })
-      .subscribe(question => this.question = question);
-  }
-
+      .subscribe(question => {
+        this.question = question;
+        this.timeLeft = this.question[0].timeLeftInSec;
+        
+      });
+      
+    }
+    nextQuestion() {
+      if(this.form.valid) {
+        if (this.form.value.choice_id) {
+          
+          this.form.value.todo = true
+          this.form.value.ques_id = this.question[1].ques_id
+          this.form.value.quiz_id = this.quizId
+        }
+        this.service.create(this.form.value)
+          .subscribe(question => {
+            this.question = question;
+            this.timeLeft = this.question[0].timeLeftInSec;
+          });
+      }
+    }
 } 

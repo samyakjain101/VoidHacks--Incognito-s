@@ -222,7 +222,6 @@ class AttempQuiz(APIView):
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
         
         elif(todo == False):
-            
             try:
                 quiz_id = uuid.UUID(data["quiz_id"]).hex
             except ValueError:
@@ -232,18 +231,20 @@ class AttempQuiz(APIView):
                 quiz = Quiz.objects.get(id = quiz_id)
             except Quiz.DoesNotExist:
                 return Response("Quiz id don't exist", status=status.HTTP_400_BAD_REQUEST)
-
+            
             #Check if user is attempting quiz first time.
             #If not Permission Denied.
             if quiz.start_date <= timezone.now() and quiz.end_date > timezone.now():
                 # print("myuser: "+ str(request.user) )
                 # obj, created = QuizRecord.objects.get_or_create(user=request.user, quiz=quiz)
                 obj, created = QuizRecord.objects.get_or_create(user=request.user, quiz=quiz)
+                
                 if created:
-                    qlist = random.shuffle(quiz.question_set.all())
+                    qlist = quiz.question_set.all()
                     QuizAnswerRecord.objects.bulk_create(
                         [QuizAnswerRecord(record = obj, question = x) for x in qlist]
                     )
+                
                 else:
                     if obj.start + quiz.duration < timezone.now() or obj.is_submitted:
                         return Response("time over 1", status=status.HTTP_400_BAD_REQUEST)
@@ -251,10 +252,12 @@ class AttempQuiz(APIView):
                 #here sending que 1 by 1
                 try:
                     quiz_record = QuizRecord.objects.get(user=request.user, quiz=quiz)
+                    print(quiz_record.quizanswerrecord_set.all())
                     currQue = quiz_record.quizanswerrecord_set.all().filter(viewed=False)[0].question
 
                     #below 1st line will give remaining time in seconds
                     timeLeftInSec = startTimer(quiz.end_date,quiz_record.start,quiz.duration)
+                    
                     if(timeLeftInSec == None):
                         return Response("time over acc. to startTimer func()", status=status.HTTP_400_BAD_REQUEST)        
 
@@ -264,7 +267,6 @@ class AttempQuiz(APIView):
                     unViewed = list( Choice.objects.all().filter(question=currQue) )
                     # unViewed.append(currQue)
                     # json_unViewed = serializers.serialize('json', unViewed, use_natural_foreign_keys=True, use_natural_primary_keys=True)
-                    
                     choices = Choice.objects.all().filter(question=currQue)
                             
                     ans = [
@@ -300,6 +302,7 @@ class AttempQuiz(APIView):
                     # serializer = QueRecordSerializer(currQue)
                     return Response(ans, status=status.HTTP_201_CREATED)
                 except:
+                    
                     return Response("{}", status=status.HTTP_201_CREATED)
             else:
                 return Response("time over final", status=status.HTTP_400_BAD_REQUEST)

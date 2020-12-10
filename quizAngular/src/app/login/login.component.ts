@@ -18,6 +18,7 @@ export class LoginComponent {
     private authService: AuthService) { }
 
   login(credentials: HTMLInputElement) {
+    
     this.authService.login(credentials)
       .subscribe(result => {
         if (result) {

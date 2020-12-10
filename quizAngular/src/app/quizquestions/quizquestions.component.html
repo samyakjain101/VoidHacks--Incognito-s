@@ -1,4 +1,4 @@
-<div class="text-center"><h2 class="p-3 m-3"><countdown [config]="{leftTime: 30}"></countdown></h2></div>
+<div class="text-center"><h2 class="p-3 m-3"><countdown [config]="{leftTime: timeLeft }"></countdown></h2></div>
 <div class="pt-3">
   <div class="quizheader container">
     <div class="col-lg-12">
@@ -7,25 +7,27 @@
     </div>
   </div>
   <div class="container">
-    <div class="col-lg-12 mb-5">
-      <p class="quizquestion mt-5">Q <span>1</span>. What is 2+2?</p>
-
-      <p class="quiztext col-12">
-        <input class="p-1" type="radio" name="optradio" /> 3
-      </p>
-      <p class="quiztext col-12">
-        <input class="p-1" type="radio" name="optradio" /> 5
-      </p>
-      <p class="quiztext col-12">
-        <input class="p-1" type="radio" name="optradio" /> 4
-      </p>
-      <p class="quiztext col-12">
-        <input class="p-1" type="radio" name="optradio" /> 8
-      </p>
-    </div>
-    <div class="col-lg-12">
-      <button class="btn btn-success float-right ml-2">Next</button>
-      <button class="btn btn-danger float-left ml-2">Submit</button>
-    </div>
+    <form [formGroup]="form" (submit)="nextQuestion()">
+      <div class="col-lg-12 mb-5">
+        <p class="quizquestion mt-5">Q <span>1</span>. {{ question[1].question }}</p>
+      
+        <p class="quiztext col-12">
+          <input formControlName="choice_id" value="{{question[2].id}}" class="p-1" type="radio" /> {{ question[2].choice }}
+        </p>
+        <p class="quiztext col-12">
+          <input formControlName="choice_id" value="{{question[3].id}}" class="p-1" type="radio" /> {{ question[3].choice }}
+        </p>
+        <p class="quiztext col-12">
+          <input formControlName="choice_id" value="{{question[4].id}}" class="p-1" type="radio" /> {{ question[4].choice }}
+        </p>
+        <p class="quiztext col-12">
+          <input formControlName="choice_id" value="{{question[5].id}}" class="p-1" type="radio" /> {{ question[5].choice }}
+        </p>
+      </div>
+      <div class="col-lg-12">
+        <button class="btn btn-success float-right ml-2" type="submit">Next</button>
+        <button class="btn btn-danger float-left ml-2">Submit</button>
+      </div>
+    </form>
   </div>
 </div>
