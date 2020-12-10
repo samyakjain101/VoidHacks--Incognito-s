@@ -22,6 +22,7 @@ import { QuizquestionsComponent } from './quizquestions/quizquestions.component'
 import { CreateAnswerComponent } from './create-answer/create-answer.component';
 import { ManageQuizComponent } from './manage-quiz/manage-quiz.component';
 import { EditQuizComponent } from './edit-quiz/edit-quiz.component';
+import { InviteUsersComponent } from './invite-users/invite-users.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { EditQuizComponent } from './edit-quiz/edit-quiz.component';
     CreateQuizComponent,
     CreateAnswerComponent,
     ManageQuizComponent,
-    EditQuizComponent
+    EditQuizComponent,
+    InviteUsersComponent
   ],
   imports: [
     BrowserModule,
@@ -69,6 +71,11 @@ import { EditQuizComponent } from './edit-quiz/edit-quiz.component';
       {
         path: 'no-access',
         component: NoAccessComponent
+      },
+      {
+        path: 'invite-users',
+        component: InviteUsersComponent,
+        canActivate: [AuthGuard, AdminAuthGuard]
       },
       {
         path: 'admin',
