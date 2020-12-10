@@ -1,25 +1,27 @@
 <div class="container">
     <div class="text-center">
         <h1 class="m-5">Give Staff Access</h1>
-        <a class="btn btn-info m-3 mx-auto text-center">
+        <a class="btn btn-info m-3 mx-auto text-center" (click)="sendInvitation()">
             Send Invitation</a>
     </div>
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col"></th>
-                <th>Users</th>
-                <th></th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let user of users; index as i">
-                <th class="row"><input type="checkbox" value="{{user.id}}"></th>
-                <th>{{ user.username }}</th>
-                <th><a>Edit</a></th>
-                <th><a>Delete</a></th>
-            </tr>
-        </tbody>
-    </table>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th>Users</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let user of users; index as i">
+                    <th class="row">
+                        <input type="checkbox" name="options" value="{{user.id}}"  [(ngModel)]="user.checked"/>
+                    </th>
+                    <th>{{ user.username }}</th>
+                    <th><a>Edit</a></th>
+                    <th><a>Delete</a></th>
+                </tr>
+            </tbody>
+        </table>
 </div>
