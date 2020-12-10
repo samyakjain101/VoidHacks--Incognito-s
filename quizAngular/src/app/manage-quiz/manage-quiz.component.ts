@@ -7,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './manage-quiz.component.html',
   styleUrls: ['./manage-quiz.component.css']
 })
-export class ManageQuizComponent {
+export class ManageQuizComponent implements OnInit{
   quizzes: any;
 
   constructor(private service: ManageQuizService) { }

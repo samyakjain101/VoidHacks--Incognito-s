@@ -12,7 +12,7 @@
     <tr *ngFor="let quiz of quizzes; index as i">
       <th class="row">{{i+1}}</th>
       <th>{{ quiz.title }}</th>
-      <th><a href="">Edit</a></th>
+      <th><a [routerLink]="['/edit-quiz', quiz.id]">Edit</a></th>
     </tr>
   </tbody>
 </table>
