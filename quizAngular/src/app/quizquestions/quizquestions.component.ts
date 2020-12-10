@@ -49,7 +49,7 @@ export class QuizquestionsComponent implements OnInit {
         if (this.form.value.choice_id) {
           
           this.form.value.todo = true
-          this.form.value.ques_id = this.question[1].ques_id
+          this.form.value.ques_id = this.question[1].ques_id 
           this.form.value.quiz_id = this.quizId
         }
         this.service.create(this.form.value)
