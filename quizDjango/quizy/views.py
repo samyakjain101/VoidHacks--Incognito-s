@@ -108,85 +108,124 @@ class AttempQuiz(APIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
-    def get(self, request, format=None):
-        data = request.GET.get("quiz_id")
-        print(data)
-
-        try:
-            quiz_id = uuid.UUID(data).hex
-        except ValueError:
-            return Response("id value error", status=status.HTTP_400_BAD_REQUEST)
-
-        try: 
-            quiz = Quiz.objects.get(id = quiz_id)
-        except Quiz.DoesNotExist:
-            return Response("Quiz id don't exist", status=status.HTTP_400_BAD_REQUEST)
-
-        #Check if user is attempting quiz first time.
-        #If not Permission Denied.
-        if quiz.start_date <= timezone.now() and quiz.end_date > timezone.now():
-            # print("myuser: "+ str(request.user) )
-            # obj, created = QuizRecord.objects.get_or_create(user=request.user, quiz=quiz)
-            obj, created = QuizRecord.objects.get_or_create(user=request.user, quiz=quiz)
-            if created:
-                qlist = random.shuffle(quiz.question_set.all())
-                QuizAnswerRecord.objects.bulk_create(
-                    [QuizAnswerRecord(record = obj, question = x) for x in qlist]
-                )
-            else:
-                if obj.start + quiz.duration < timezone.now() or obj.is_submitted:
-                    return Response("time over 1", status=status.HTTP_400_BAD_REQUEST)
-            
-            #here sending que 1 by 1
-            try:
-                quiz_record = QuizRecord.objects.get(user=request.user, quiz=quiz)
-                currQue = quiz_record.quizanswerrecord_set.all().filter(viewed=False)[0].question
-
-                quiz_record.viewed = True
-                quiz_record.save()
-
-                unViewed = list( Choice.objects.all().filter(question=currQue) )
-                unViewed.append(currQue)
-                json_unViewed = serializers.serialize('json', unViewed, use_natural_keys=True)
-
-                # serializer = QueRecordSerializer(currQue)
-                return Response(json_unViewed.data, status=status.HTTP_201_CREATED)
-            except:
-                return Response("{}", status=status.HTTP_201_CREATED)
-        else:
-            return Response("time over final", status=status.HTTP_400_BAD_REQUEST)
-
     def post(self, request, format=None):
         #quiz_id
         #question_id
         #answer choice id
+        #todo
         data = JSONParser().parse(request)
         print(data)
         print(data["quiz_id"])
+        todo = data["todo"]
 
-        try:
-            quiz_id = uuid.UUID(data["quiz_id"]).hex
-        except ValueError:
-            return Response(data, status=status.HTTP_400_BAD_REQUEST)
+        if(todo == "ans-n-que"):
 
-        try: 
-            quiz = Quiz.objects.get(id = quiz_id)
             try:
-                que = Question.objects.get(id=data["ques_id"])
-                mychoice = Choice.objects.get(id=data["choice_id"])
-                myRec = QuizRecord.objects.get(user=request.user,quiz=quiz)
-                myQRec = QuizAnswerRecord.objects.get(record=myRec,question=que)
+                quiz_id = uuid.UUID(data["quiz_id"]).hex
+            except ValueError:
+                return Response("id value error", status=status.HTTP_400_BAD_REQUEST)
 
-                myQRec.myAns = mychoice
-                myQRec.viewed = True
-                myQRec.save()
-                return Response(data, status=status.HTTP_201_CREATED)
+            try: 
+                quiz = Quiz.objects.get(id = quiz_id)
+                try:
+                    que = Question.objects.get(id=data["ques_id"])
+                    mychoice = Choice.objects.get(id=data["choice_id"])
+                    myRec = QuizRecord.objects.get(user=request.user,quiz=quiz)
+                    myQRec = QuizAnswerRecord.objects.get(record=myRec,question=que)
 
-            except Question.DoesNotExist:
-                return Response("Question dont exist", status=status.HTTP_400_BAD_REQUEST)
+                    myQRec.myAns = mychoice
+                    myQRec.viewed = True
+                    myQRec.save()
+                    return Response(data, status=status.HTTP_201_CREATED)
 
-        except Quiz.DoesNotExist:
-            return Response(data, status=status.HTTP_400_BAD_REQUEST)
+                    #From here, procedure of showingnext question
+                    
+                    #Check if user is attempting quiz first time.
+                    #If not Permission Denied.
+                    if quiz.start_date <= timezone.now() and quiz.end_date > timezone.now():
+                        # print("myuser: "+ str(request.user) )
+                        # obj, created = QuizRecord.objects.get_or_create(user=request.user, quiz=quiz)
+                        obj, created = QuizRecord.objects.get_or_create(user=request.user, quiz=quiz)
+                        if created:
+                            qlist = random.shuffle(quiz.question_set.all())
+                            QuizAnswerRecord.objects.bulk_create(
+                                [QuizAnswerRecord(record = obj, question = x) for x in qlist]
+                            )
+                        else:
+                            if obj.start + quiz.duration < timezone.now() or obj.is_submitted:
+                                return Response("time over 1", status=status.HTTP_400_BAD_REQUEST)
+                        
+                        #here sending que 1 by 1
+                        try:
+                            quiz_record = QuizRecord.objects.get(user=request.user, quiz=quiz)
+                            currQue = quiz_record.quizanswerrecord_set.all().filter(viewed=False)[0].question
+
+                            quiz_record.viewed = True
+                            quiz_record.save()
+
+                            unViewed = list( Choice.objects.all().filter(question=currQue) )
+                            unViewed.append(currQue)
+                            json_unViewed = serializers.serialize('json', unViewed, use_natural_foreign_keys=True, use_natural_primary_keys=True)
+
+                            # serializer = QueRecordSerializer(currQue)
+                            return Response(json_unViewed.data, status=status.HTTP_201_CREATED)
+                        except:
+                            return Response("{}", status=status.HTTP_201_CREATED)
+                    else:
+                        return Response("time over final", status=status.HTTP_400_BAD_REQUEST)
+
+                except Question.DoesNotExist:
+                    return Response("Question dont exist", status=status.HTTP_400_BAD_REQUEST)
+
+            except Quiz.DoesNotExist:
+                return Response(data, status=status.HTTP_400_BAD_REQUEST)
+        
+        elif(todo == "only-que"):
+            
+            try:
+                quiz_id = uuid.UUID(data).hex
+            except ValueError:
+                return Response("id value error", status=status.HTTP_400_BAD_REQUEST)
+
+            try: 
+                quiz = Quiz.objects.get(id = quiz_id)
+            except Quiz.DoesNotExist:
+                return Response("Quiz id don't exist", status=status.HTTP_400_BAD_REQUEST)
+
+            #Check if user is attempting quiz first time.
+            #If not Permission Denied.
+            if quiz.start_date <= timezone.now() and quiz.end_date > timezone.now():
+                # print("myuser: "+ str(request.user) )
+                # obj, created = QuizRecord.objects.get_or_create(user=request.user, quiz=quiz)
+                obj, created = QuizRecord.objects.get_or_create(user=request.user, quiz=quiz)
+                if created:
+                    qlist = random.shuffle(quiz.question_set.all())
+                    QuizAnswerRecord.objects.bulk_create(
+                        [QuizAnswerRecord(record = obj, question = x) for x in qlist]
+                    )
+                else:
+                    if obj.start + quiz.duration < timezone.now() or obj.is_submitted:
+                        return Response("time over 1", status=status.HTTP_400_BAD_REQUEST)
+                
+                #here sending que 1 by 1
+                try:
+                    quiz_record = QuizRecord.objects.get(user=request.user, quiz=quiz)
+                    currQue = quiz_record.quizanswerrecord_set.all().filter(viewed=False)[0].question
+
+                    quiz_record.viewed = True
+                    quiz_record.save()
+
+                    unViewed = list( Choice.objects.all().filter(question=currQue) )
+                    unViewed.append(currQue)
+                    json_unViewed = serializers.serialize('json', unViewed, use_natural_foreign_keys=True, use_natural_primary_keys=True)
+
+                    # serializer = QueRecordSerializer(currQue)
+                    return Response(json_unViewed.data, status=status.HTTP_201_CREATED)
+                except:
+                    return Response("{}", status=status.HTTP_201_CREATED)
+            else:
+                return Response("time over final", status=status.HTTP_400_BAD_REQUEST)
+
 
 class SendUsers(APIView):
     authentication_classes = (TokenAuthentication,)
