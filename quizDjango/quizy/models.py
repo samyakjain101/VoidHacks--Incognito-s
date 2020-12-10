@@ -53,13 +53,17 @@ class QuizAnswerRecord(models.Model):
     record =  models.ForeignKey(QuizRecord,on_delete=models.CASCADE)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     myAns = models.ForeignKey(Choice, on_delete=models.CASCADE, blank=True, null=True)
-    MARK_FOR_REVIEW = 1                
-    SAVE_AND_NEXT = 2   
-    STATUS_CHOICES = (
-        (MARK_FOR_REVIEW, 'Mark for review'),
-        (SAVE_AND_NEXT, 'Save & Next'),
-    )
-    status = models.SmallIntegerField(choices=STATUS_CHOICES, default=0)
+    
+    # MARK_FOR_REVIEW = 1                
+    # SAVE_AND_NEXT = 2   
+    # STATUS_CHOICES = (
+    #     (MARK_FOR_REVIEW, 'Mark for review'),
+    #     (SAVE_AND_NEXT, 'Save & Next'),
+    # )
+    # status = models.SmallIntegerField(choices=STATUS_CHOICES, default=0)
+    
+    #new
+    viewed = models.BooleanField(default=False)
     class Meta:
         unique_together = [
             ("record", "question"),

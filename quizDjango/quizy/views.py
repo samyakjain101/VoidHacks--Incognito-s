@@ -1,5 +1,6 @@
 import uuid
 import json
+import random
 from datetime import timedelta, datetime #for timer 
 from .models import *
 from django.core.exceptions import PermissionDenied
@@ -13,7 +14,7 @@ from rest_framework.decorators import api_view
 from rest_framework.parsers import JSONParser
 
 # from account.models import Account
-from .serializers import QuizSerializer
+from .serializers import QuizSerializer,QueRecordSerializer
 
 SUCCESS = 'success'
 ERROR = 'error'
@@ -87,3 +88,46 @@ def create_answer_view(request):
         quizzes = Quiz.objects.all()
         serializer = QuizSerializer(quizzes, many=True)
         return Response(serializer.data)
+
+@api_view(['GET'])
+def attempt_quiz(request):
+    # Check if quiz_id is valid uuid 
+    # data = JSONParser().parse(request)
+    # print(data)
+    # print(data["quiz_id"])
+    data = request.GET.get("quiz_id")
+    print(data)
+
+    try:
+        quiz_id = uuid.UUID(data).hex
+    except ValueError:
+        return Response("quiz", status=status.HTTP_400_BAD_REQUEST)
+
+    try: 
+        quiz = Quiz.objects.get(id = quiz_id)
+    except Quiz.DoesNotExist:
+        return Response(data, status=status.HTTP_400_BAD_REQUEST)
+
+    #Check if user is attempting quiz first time.
+    #If not Permission Denied.
+    if quiz.start_date <= timezone.now() and quiz.end_date > timezone.now():
+        obj, created = QuizRecord.objects.get_or_create(user=request.user, quiz=quiz)
+        if created:
+            qlist = random.shuffle(quiz.question_set.all())
+            QuizAnswerRecord.objects.bulk_create(
+                [QuizAnswerRecord(record = obj, question = x) for x in qlist]
+            )
+        else:
+            if obj.start + quiz.duration < timezone.now() or obj.is_submitted:
+                return Response(data, status=status.HTTP_400_BAD_REQUEST)
+        
+        #here sending que 1 by 1
+        try:
+            quiz_record = QuizRecord.objects.get(user=request.user, quiz=quiz)
+            currQue = quiz_record.quizanswerrecord_set.all().filter(viewed=False)
+            serializer = QueRecordSerializer(currQue)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        except:
+            return Response("{}", status=status.HTTP_201_CREATED)
+    else:
+        return Response(data, status=status.HTTP_400_BAD_REQUEST)
