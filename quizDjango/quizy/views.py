@@ -21,7 +21,7 @@ from knox.auth import TokenAuthentication
 
 
 # from account.models import Account
-from .serializers import QuizSerializer,QueRecordSerializer,AllQuesSerializer
+from .serializers import QuizSerializer,QueRecordSerializer,AllQuesSerializer,UserSerializer
 from django.core import serializers
 
 SUCCESS = 'success'
@@ -149,8 +149,8 @@ class AttempQuiz(APIView):
                 unViewed.append(currQue)
                 json_unViewed = serializers.serialize('json', unViewed, use_natural_keys=True)
 
-                serializer = QueRecordSerializer(currQue)
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
+                # serializer = QueRecordSerializer(currQue)
+                return Response(json_unViewed.data, status=status.HTTP_201_CREATED)
             except:
                 return Response("{}", status=status.HTTP_201_CREATED)
         else:
@@ -187,3 +187,13 @@ class AttempQuiz(APIView):
 
         except Quiz.DoesNotExist:
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
+
+class SendUsers(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, format=None):
+
+        usr = User.objects.all()
+        serializer = UserSerializer(usr, many=True)
+        return Response(serializer.data)
