@@ -61,7 +61,7 @@ import { EditQuizComponent } from './edit-quiz/edit-quiz.component';
         component: QuizdetailComponent
       },
       {
-        path: 'quiz-questions',
+        path: 'attempt-quiz',
         component: QuizquestionsComponent
       },
       {

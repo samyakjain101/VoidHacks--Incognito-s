@@ -44,11 +44,9 @@ export class CreateAnswerComponent implements OnInit{
   get choice4() { return this.form.get('choice4'); }
 
   addQuestion() {
-    console.log(this.form.value.choice);
     this.form.value.quiz_id=this.quizId;
     
     if (this.form.valid) {
-      console.log(this.form.value.quiz_id);
       this.CreateAnswerService.create(this.form.value)
         .subscribe(result => {
           if (result) {

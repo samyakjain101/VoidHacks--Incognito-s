@@ -15,11 +15,11 @@ export class DataService {
     }
 
     getAll(params?: any) {
-        return this.http.get(this.url)
+        return this.http.get(this.url, this.getHeader())
             .pipe( catchError(this.handleError) );
     }
     create(resource: any) {
-        return this.http.post(this.url, resource)
+        return this.http.post(this.url, resource, this.getHeader())
             .pipe(
                 catchError(this.handleError)
             );

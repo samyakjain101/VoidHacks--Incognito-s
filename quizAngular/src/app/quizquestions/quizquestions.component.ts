@@ -12,4 +12,4 @@ export class QuizquestionsComponent implements OnInit {
   ngOnInit(): void {
   }
 
-}
+} 
