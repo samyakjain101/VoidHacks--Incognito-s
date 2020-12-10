@@ -63,7 +63,7 @@ import { ResultComponent } from './result/result.component';
         component: QuizdetailComponent
       },
       {
-        path: 'attempt-quiz',
+        path: 'attempt-quiz/:token/:quiz_id',
         component: QuizquestionsComponent
       },
       {
