@@ -144,7 +144,7 @@ class AttempQuiz(APIView):
                     myQRec.myAns = mychoice
                     myQRec.viewed = True
                     myQRec.save()
-                    return Response(data, status=status.HTTP_201_CREATED)
+                    # return Response(data, status=status.HTTP_201_CREATED)
 
                     #From here, procedure of showingnext question
 
@@ -166,6 +166,12 @@ class AttempQuiz(APIView):
                         #here sending que 1 by 1
                         try:
                             quiz_record = QuizRecord.objects.get(user=request.user, quiz=quiz)
+                            
+                            #below 1st line will give remaining time in seconds
+                            timeLeftInSec = startTimer(quiz.end_date,quiz_record.start,quiz.duration)
+                            if(timeLeftInSec == None):
+                                return Response("time over acc. to startTimer func()", status=status.HTTP_400_BAD_REQUEST)        
+
                             currQue = quiz_record.quizanswerrecord_set.all().filter(viewed=False)[0].question
 
                             quiz_record.viewed = True
@@ -173,6 +179,7 @@ class AttempQuiz(APIView):
 
                             unViewed = list( Choice.objects.all().filter(question=currQue) )
                             unViewed.append(currQue)
+                            unViewed.append(timeLeftInSec)
                             json_unViewed = serializers.serialize('json', unViewed, use_natural_foreign_keys=True, use_natural_primary_keys=True)
 
                             # serializer = QueRecordSerializer(currQue)
@@ -276,40 +283,17 @@ class SendUsers(APIView):
             except Quiz.DoesNotExist:
                 return Response("Quiz id don't exist", status=status.HTTP_400_BAD_REQUEST)
 
-            #TODO Deciede this or below
-            # for usr in lst:
-            #     Token.objects.get_or_create(user=User.objects.get(id=usr))
-            
-            print(data["listOfIds"])
-
-            # obj, created = QuizRecord.objects.get_or_create(user=request.user, quiz=quiz)
-            # if created:
-
-            # QuizAnswerRecord.objects.bulk_create(
-            #             [QuizAnswerRecord(record = obj, question = x) for x in qlist]
-            #         )
-
-            # try:
-            #     User.objects.filter(id__in=[1, 3, 4])    
-            # except:
-            #     # pass
-            #     print("XYz")
-
-            # Token.objects.bulk_create(
-            #     [Token(user = User.objects.get(id=usr)) for usr in lst]
-            # )
-
-            
-            
-
-            print(data["listOfIds"])
             
             for usr in lst:
-                message = '{} {} invited you to give {} Quiz on Quizy. Go to http://localhost:8080/{}/{}/ to start.'.format(
-                    request.user.first_name,
-                    request.user.last_name,
+                token = Token.objects.get_or_create(user=User.objects.get(id=usr))
+                # print(token.key)
+            
+            print(data["listOfIds"])
+            for usr in lst:
+                message = '{} invited you to give {} Quiz on Quizy. Go to http://192.168.225.24:4200/{}/{}/ to start.'.format(
+                    request.user.username,
                     quiz.title,
-                    Token.objects.get(user=User.objects.get(id=usr)),
+                    Token.objects.get(user=User.objects.get(id=usr)).key,
                     quiz.id
                 )
                 subject = "You have 1 Quizy Invitation!"
@@ -318,8 +302,30 @@ class SendUsers(APIView):
                 #Send email to selected user
                 send_email(subject,message,from_email,to_mail)
 
-            print(data["listOfIds"])
+            # print(data["listOfIds"])
 
             return Response("send mail to all", status=status.HTTP_201_CREATED)
         except:
             return Response("Some error occured", status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+def startTimer(quizEndDate,recordStartDate,quizDuration):
+    #below for timer
+    #For setting time for js timer:
+    # (end date - start date) = Total duration or Td
+    Td = quizEndDate - recordStartDate
+    if Td > quizDuration:  # case 1: Td > d -> timerDuration = d
+        timerDuration = quizDuration
+    elif Td < quizDuration: # case 2: Td < d -> timerDuration = Td
+        timerDuration = Td 
+    elif Td == quizDuration: # case 3: Td == d -> timerDuration = d
+        timerDuration = quizDuration
+    
+    recordEndDate = recordStartDate + timerDuration
+    
+    if recordEndDate < datetime.now(tz=recordEndDate.tzinfo):
+        return None
+
+    return int(timerDuration.total_seconds())
