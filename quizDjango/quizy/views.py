@@ -126,7 +126,7 @@ class AttempQuiz(APIView):
         # print(data["quiz_id"])
         todo = data["todo"]
 
-        if(todo == "ans-n-que"):
+        if(todo == True):
 
             try:
                 quiz_id = uuid.UUID(data["quiz_id"]).hex
@@ -221,7 +221,7 @@ class AttempQuiz(APIView):
             except Quiz.DoesNotExist:
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
         
-        elif(todo == "only-que"):
+        elif(todo == False):
             
             try:
                 quiz_id = uuid.UUID(data["quiz_id"]).hex
@@ -253,15 +253,52 @@ class AttempQuiz(APIView):
                     quiz_record = QuizRecord.objects.get(user=request.user, quiz=quiz)
                     currQue = quiz_record.quizanswerrecord_set.all().filter(viewed=False)[0].question
 
+                    #below 1st line will give remaining time in seconds
+                    timeLeftInSec = startTimer(quiz.end_date,quiz_record.start,quiz.duration)
+                    if(timeLeftInSec == None):
+                        return Response("time over acc. to startTimer func()", status=status.HTTP_400_BAD_REQUEST)        
+
                     quiz_record.viewed = True
                     quiz_record.save()
 
                     unViewed = list( Choice.objects.all().filter(question=currQue) )
-                    unViewed.append(currQue)
-                    json_unViewed = serializers.serialize('json', unViewed, use_natural_foreign_keys=True, use_natural_primary_keys=True)
+                    # unViewed.append(currQue)
+                    # json_unViewed = serializers.serialize('json', unViewed, use_natural_foreign_keys=True, use_natural_primary_keys=True)
+                    
+                    choices = Choice.objects.all().filter(question=currQue)
+                            
+                    ans = [
+                            {
+                                "timeLeftInSec" : timeLeftInSec,
+                            },
+                            {
+                                "question" : currQue.question,
+                                "ques_id" : currQue.id
+                            },
+                            {
+                                "id": choices[0].id,
+                                "choice": choices[0].choice,
+                                "is_correct": choices[0].is_correct
+                            },
+                            {
+                                "id": choices[1].id,
+                                "choice": choices[1].choice,
+                                "is_correct": choices[1].is_correct
+                            },
+                            {
+                                "id": choices[2].id,
+                                "choice": choices[2].choice,
+                                "is_correct": choices[2].is_correct
+                            },
+                            {
+                                "id": choices[3].id,
+                                "choice": choices[3].choice,
+                                "is_correct": choices[3].is_correct
+                            },
+                        ]
 
                     # serializer = QueRecordSerializer(currQue)
-                    return Response(json_unViewed.data, status=status.HTTP_201_CREATED)
+                    return Response(ans, status=status.HTTP_201_CREATED)
                 except:
                     return Response("{}", status=status.HTTP_201_CREATED)
             else:
