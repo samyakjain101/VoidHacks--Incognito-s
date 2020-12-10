@@ -6,6 +6,7 @@ import { AuthGuard } from './services/auth-guard.service';
 import { RouterModule } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, ErrorHandler } from '@angular/core';
+import { CountdownModule } from 'ngx-countdown';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -43,6 +44,7 @@ import { EditQuizComponent } from './edit-quiz/edit-quiz.component';
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
+    CountdownModule,
     RouterModule.forRoot([
       {
         path: '',
