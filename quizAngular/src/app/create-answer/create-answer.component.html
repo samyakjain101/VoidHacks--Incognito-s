@@ -1,6 +1,7 @@
-<div class="container w-50">
+<div class="container w-50 mt-5">
+<h2 class="text-center p-3 mt-5">Add/edit a question</h2>
     <form [formGroup]="form" (submit)="addQuestion()">
-        <div class="form-group">
+        <div class="form-group pt-5">
             <input formControlName="question" type="text" placeholder="Question" name="question" class="form-control col-12">
             <div *ngIf="question?.touched && question?.invalid" class="alert alert-danger">
                 <div *ngIf="question?.errors?.required">
