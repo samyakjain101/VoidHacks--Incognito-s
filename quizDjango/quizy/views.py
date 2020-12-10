@@ -62,13 +62,16 @@ def api_add_mcq_view(request):
         quiz = Quiz.objects.get(id = quiz_id)
         que = Question(quiz=quiz,question=data["question"])
         que.save()
-        c1 = Choice(question=que,choice=data["choice1"],is_correct=data["choice1bool"])
+
+        ans = data["choice"]        
+
+        c1 = Choice(question=que,choice=data["choice1"],is_correct=True if (ans=="1") else False)
         c1.save()
-        c2 = Choice(question=que,choice=data["choice2"],is_correct=data["choice2bool"])
+        c2 = Choice(question=que,choice=data["choice2"],is_correct=True if (ans=="2") else False)
         c2.save()
-        c3 = Choice(question=que,choice=data["choice3"],is_correct=data["choice3bool"])
+        c3 = Choice(question=que,choice=data["choice3"],is_correct=True if (ans=="3") else False)
         c3.save()
-        c4 = Choice(question=que,choice=data["choice4"],is_correct=data["choice4bool"])
+        c4 = Choice(question=que,choice=data["choice4"],is_correct=True if (ans=="4") else False)
         c4.save()
         return Response(data, status=status.HTTP_201_CREATED)
 
@@ -139,7 +142,7 @@ class AttempQuiz(APIView):
                     return Response(data, status=status.HTTP_201_CREATED)
 
                     #From here, procedure of showingnext question
-                    
+
                     #Check if user is attempting quiz first time.
                     #If not Permission Denied.
                     if quiz.start_date <= timezone.now() and quiz.end_date > timezone.now():
@@ -183,7 +186,7 @@ class AttempQuiz(APIView):
         elif(todo == "only-que"):
             
             try:
-                quiz_id = uuid.UUID(data).hex
+                quiz_id = uuid.UUID(data["quiz_id"]).hex
             except ValueError:
                 return Response("id value error", status=status.HTTP_400_BAD_REQUEST)
 
@@ -236,3 +239,15 @@ class SendUsers(APIView):
         usr = User.objects.all()
         serializer = UserSerializer(usr, many=True)
         return Response(serializer.data)
+        
+    def post(self, request, format=None):
+
+        try:
+            data = JSONParser().parse(request)
+            print(data)
+            for obj in serializers.deserialize('json', data):
+                print(obj.object) ## return the django model class object
+                print(obj.object) 
+            return Response("send mail to all", status=status.HTTP_201_CREATED)
+        except:
+            return Response("Some error occured", status=status.HTTP_400_BAD_REQUEST)
