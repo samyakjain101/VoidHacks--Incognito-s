@@ -9,15 +9,10 @@
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <th class="row">1</th>
-      <th>Matrix Operations</th>
-      <th><a href="">Edit</a></th>
+    <tr *ngFor="let quiz of quizzes; index as i">
+      <th class="row">{{i+1}}</th>
+      <th>{{ quiz.title }}</th>
+      <th><a [routerLink]="['/edit-quiz', quiz.id]">Edit</a></th>
     </tr>
   </tbody>
 </table>
-<ul *ngIf="quizzes">
-  <li *ngFor="let quiz of quizzes">{{ quiz.title }}</li>
-</ul>
-<p *ngIf="!quizzes">Quizzes not found</p>
-</div>

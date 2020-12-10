@@ -1,5 +1,5 @@
-<div class="container w-50 mt-5">
-    <form [formGroup]="form" (submit)="createAnswer()">
+<div class="container w-50">
+    <form [formGroup]="form" (submit)="addQuestion()">
         <div class="form-group">
             <input formControlName="question" type="text" placeholder="Question" name="question" class="form-control col-12">
             <div *ngIf="question?.touched && question?.invalid" class="alert alert-danger">
