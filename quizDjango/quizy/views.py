@@ -123,7 +123,7 @@ class AttempQuiz(APIView):
         #todo
         data = JSONParser().parse(request)
         print(data)
-        print(data["quiz_id"])
+        # print(data["quiz_id"])
         todo = data["todo"]
 
         if(todo == "ans-n-que"):
