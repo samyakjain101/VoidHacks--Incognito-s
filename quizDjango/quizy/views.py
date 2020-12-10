@@ -18,11 +18,16 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from knox.auth import TokenAuthentication
-
+from rest_framework.authtoken.models import Token
 
 # from account.models import Account
 from .serializers import QuizSerializer,QueRecordSerializer,AllQuesSerializer,UserSerializer
 from django.core import serializers
+
+#mail
+from django.core.mail import BadHeaderError, send_mail
+from django.conf import settings # for getting from mail (sending mail)
+
 
 SUCCESS = 'success'
 ERROR = 'error'
@@ -230,9 +235,22 @@ class AttempQuiz(APIView):
                 return Response("time over final", status=status.HTTP_400_BAD_REQUEST)
 
 
+
+def send_email(subject,message,from_email,to_mail):
+    if subject and message and from_email:
+        try:
+            send_mail(subject, message, from_email, to_mail, fail_silently=True)
+        except BadHeaderError:
+            send_mail("Invalid header found in sent below email", "Subject : " + subject + "\n" + "Message : " + message, from_email, from_email, fail_silently=True)
+            #return HttpResponse('Invalid header found.')
+        #return HttpResponseRedirect('/contact/thanks/')
+    else:
+        send_mail("all field not filled error in sent below email", "Subject : " + subject + "\n" + "Message : " + message, from_email, from_email, fail_silently=True)
+
+
 class SendUsers(APIView):
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
+    # authentication_classes = (TokenAuthentication,)
+    # permission_classes = (IsAuthenticated,)
 
     def get(self, request, format=None):
 
@@ -245,9 +263,63 @@ class SendUsers(APIView):
         try:
             data = JSONParser().parse(request)
             print(data)
-            for obj in serializers.deserialize('json', data):
-                print(obj.object) ## return the django model class object
-                print(obj.object) 
+            print(data["listOfIds"])
+
+            lst = data["listOfIds"]
+            try:
+                quiz_id = uuid.UUID(data["quiz_id"]).hex
+            except ValueError:
+                return Response("id value error", status=status.HTTP_400_BAD_REQUEST)
+
+            try: 
+                quiz = Quiz.objects.get(id = quiz_id)
+            except Quiz.DoesNotExist:
+                return Response("Quiz id don't exist", status=status.HTTP_400_BAD_REQUEST)
+
+            #TODO Deciede this or below
+            # for usr in lst:
+            #     Token.objects.get_or_create(user=User.objects.get(id=usr))
+            
+            print(data["listOfIds"])
+
+            # obj, created = QuizRecord.objects.get_or_create(user=request.user, quiz=quiz)
+            # if created:
+
+            # QuizAnswerRecord.objects.bulk_create(
+            #             [QuizAnswerRecord(record = obj, question = x) for x in qlist]
+            #         )
+
+            # try:
+            #     User.objects.filter(id__in=[1, 3, 4])    
+            # except:
+            #     # pass
+            #     print("XYz")
+
+            # Token.objects.bulk_create(
+            #     [Token(user = User.objects.get(id=usr)) for usr in lst]
+            # )
+
+            
+            
+
+            print(data["listOfIds"])
+            
+            for usr in lst:
+                message = '{} {} invited you to give {} Quiz on Quizy. Go to http://localhost:8080/{}/{}/ to start.'.format(
+                    request.user.first_name,
+                    request.user.last_name,
+                    quiz.title,
+                    Token.objects.get(user=User.objects.get(id=usr)),
+                    quiz.id
+                )
+                subject = "You have 1 Quizy Invitation!"
+                from_email = settings.EMAIL_HOST_USER
+                to_mail = [User.objects.get(id=usr).email]
+                #Send email to selected user
+                send_email(subject,message,from_email,to_mail)
+
+            print(data["listOfIds"])
+
             return Response("send mail to all", status=status.HTTP_201_CREATED)
         except:
             return Response("Some error occured", status=status.HTTP_400_BAD_REQUEST)
