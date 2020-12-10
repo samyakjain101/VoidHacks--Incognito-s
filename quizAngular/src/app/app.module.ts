@@ -6,6 +6,7 @@ import { AuthGuard } from './services/auth-guard.service';
 import { RouterModule } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, ErrorHandler } from '@angular/core';
+import { CountdownModule } from 'ngx-countdown';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -21,6 +22,8 @@ import { QuizquestionsComponent } from './quizquestions/quizquestions.component'
 import { CreateAnswerComponent } from './create-answer/create-answer.component';
 import { ManageQuizComponent } from './manage-quiz/manage-quiz.component';
 import { EditQuizComponent } from './edit-quiz/edit-quiz.component';
+import { InviteUsersComponent } from './invite-users/invite-users.component';
+import { ResultComponent } from './result/result.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +38,9 @@ import { EditQuizComponent } from './edit-quiz/edit-quiz.component';
     CreateQuizComponent,
     CreateAnswerComponent,
     ManageQuizComponent,
-    EditQuizComponent
+    EditQuizComponent,
+    InviteUsersComponent,
+    ResultComponent
   ],
   imports: [
     BrowserModule,
@@ -43,11 +48,8 @@ import { EditQuizComponent } from './edit-quiz/edit-quiz.component';
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
+    CountdownModule,
     RouterModule.forRoot([
-      {
-        path: '',
-        component: HomeComponent
-      },
       {
         path: 'login',
         component: LoginComponent
@@ -67,6 +69,11 @@ import { EditQuizComponent } from './edit-quiz/edit-quiz.component';
       {
         path: 'no-access',
         component: NoAccessComponent
+      },
+      {
+        path: 'invite-users',
+        component: InviteUsersComponent,
+        canActivate: [AuthGuard, AdminAuthGuard]
       },
       {
         path: 'admin',

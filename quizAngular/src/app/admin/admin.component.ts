@@ -16,6 +16,7 @@ export class AdminComponent implements OnInit {
     this.service.getAll()
       .subscribe(users => this.users = users);
   }
+<<<<<<< HEAD
   
   get selectedOptions() { 
     return this.users.filter((x:any) => x.checked === true);
@@ -26,4 +27,6 @@ export class AdminComponent implements OnInit {
     
   }
 
+=======
+>>>>>>> d4d12bfd3f749253cfcbdbd659b16dc6a7781689
 }

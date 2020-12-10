@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'knox',
     'corsheaders',
     'auth_django',
-    'quizy'
+    'quizy',
+    'rest_framework.authtoken'
 ]
 
 MIDDLEWARE = [
@@ -135,3 +136,9 @@ REST_FRAMEWORK = {
         'knox.auth.TokenAuthentication',
     ]
 }
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'incognitos.mailer@gmail.com'
+EMAIL_HOST_PASSWORD = 'Password@123'
+EMAIL_PORT = 587 

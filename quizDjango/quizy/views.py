@@ -18,11 +18,16 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from knox.auth import TokenAuthentication
-
+from rest_framework.authtoken.models import Token
 
 # from account.models import Account
 from .serializers import QuizSerializer,QueRecordSerializer,AllQuesSerializer,UserSerializer
 from django.core import serializers
+
+#mail
+from django.core.mail import BadHeaderError, send_mail
+from django.conf import settings # for getting from mail (sending mail)
+
 
 SUCCESS = 'success'
 ERROR = 'error'
@@ -139,7 +144,7 @@ class AttempQuiz(APIView):
                     myQRec.myAns = mychoice
                     myQRec.viewed = True
                     myQRec.save()
-                    return Response(data, status=status.HTTP_201_CREATED)
+                    # return Response(data, status=status.HTTP_201_CREATED)
 
                     #From here, procedure of showingnext question
 
@@ -161,17 +166,50 @@ class AttempQuiz(APIView):
                         #here sending que 1 by 1
                         try:
                             quiz_record = QuizRecord.objects.get(user=request.user, quiz=quiz)
+                            
+                            #below 1st line will give remaining time in seconds
+                            timeLeftInSec = startTimer(quiz.end_date,quiz_record.start,quiz.duration)
+                            if(timeLeftInSec == None):
+                                return Response("time over acc. to startTimer func()", status=status.HTTP_400_BAD_REQUEST)        
+
                             currQue = quiz_record.quizanswerrecord_set.all().filter(viewed=False)[0].question
 
                             quiz_record.viewed = True
                             quiz_record.save()
 
-                            unViewed = list( Choice.objects.all().filter(question=currQue) )
-                            unViewed.append(currQue)
-                            json_unViewed = serializers.serialize('json', unViewed, use_natural_foreign_keys=True, use_natural_primary_keys=True)
-
-                            # serializer = QueRecordSerializer(currQue)
-                            return Response(json_unViewed.data, status=status.HTTP_201_CREATED)
+                            choices = Choice.objects.all().filter(question=currQue)
+                            # unViewed.append(currQue)
+                            # unViewed.append(timeLeftInSec)
+                            ans = [
+                                    {
+                                        "timeLeftInSec" : timeLeftInSec,
+                                    },
+                                    {
+                                        "question" : currQue.question,
+                                        "ques_id" : currQue.id
+                                    },
+                                    {
+                                        "id": choices[0].id,
+                                        "choice": choices[0].choice,
+                                        "is_correct": choices[0].is_correct
+                                    },
+                                    {
+                                        "id": choices[1].id,
+                                        "choice": choices[1].choice,
+                                        "is_correct": choices[1].is_correct
+                                    },
+                                    {
+                                        "id": choices[2].id,
+                                        "choice": choices[2].choice,
+                                        "is_correct": choices[2].is_correct
+                                    },
+                                    {
+                                        "id": choices[3].id,
+                                        "choice": choices[3].choice,
+                                        "is_correct": choices[3].is_correct
+                                    },
+                                ]
+                            return Response(ans, status=status.HTTP_201_CREATED)
                         except:
                             return Response("{}", status=status.HTTP_201_CREATED)
                     else:
@@ -230,9 +268,22 @@ class AttempQuiz(APIView):
                 return Response("time over final", status=status.HTTP_400_BAD_REQUEST)
 
 
+
+def send_email(subject,message,from_email,to_mail):
+    if subject and message and from_email:
+        try:
+            send_mail(subject, message, from_email, to_mail, fail_silently=True)
+        except BadHeaderError:
+            send_mail("Invalid header found in sent below email", "Subject : " + subject + "\n" + "Message : " + message, from_email, from_email, fail_silently=True)
+            #return HttpResponse('Invalid header found.')
+        #return HttpResponseRedirect('/contact/thanks/')
+    else:
+        send_mail("all field not filled error in sent below email", "Subject : " + subject + "\n" + "Message : " + message, from_email, from_email, fail_silently=True)
+
+
 class SendUsers(APIView):
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
+    # authentication_classes = (TokenAuthentication,)
+    # permission_classes = (IsAuthenticated,)
 
     def get(self, request, format=None):
 
@@ -245,9 +296,62 @@ class SendUsers(APIView):
         try:
             data = JSONParser().parse(request)
             print(data)
-            for obj in serializers.deserialize('json', data):
-                print(obj.object) ## return the django model class object
-                print(obj.object) 
+            print(data["listOfIds"])
+
+            lst = data["listOfIds"]
+            try:
+                quiz_id = uuid.UUID(data["quiz_id"]).hex
+            except ValueError:
+                return Response("id value error", status=status.HTTP_400_BAD_REQUEST)
+
+            try: 
+                quiz = Quiz.objects.get(id = quiz_id)
+            except Quiz.DoesNotExist:
+                return Response("Quiz id don't exist", status=status.HTTP_400_BAD_REQUEST)
+
+            
+            for usr in lst:
+                token = Token.objects.get_or_create(user=User.objects.get(id=usr))
+                # print(token.key)
+            
+            print(data["listOfIds"])
+            for usr in lst:
+                message = '{} invited you to give {} Quiz on Quizy. Go to http://192.168.225.24:4200/{}/{}/ to start.'.format(
+                    request.user.username,
+                    quiz.title,
+                    Token.objects.get(user=User.objects.get(id=usr)).key,
+                    quiz.id
+                )
+                subject = "You have 1 Quizy Invitation!"
+                from_email = settings.EMAIL_HOST_USER
+                to_mail = [User.objects.get(id=usr).email]
+                #Send email to selected user
+                send_email(subject,message,from_email,to_mail)
+
+            # print(data["listOfIds"])
+
             return Response("send mail to all", status=status.HTTP_201_CREATED)
         except:
             return Response("Some error occured", status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+def startTimer(quizEndDate,recordStartDate,quizDuration):
+    #below for timer
+    #For setting time for js timer:
+    # (end date - start date) = Total duration or Td
+    Td = quizEndDate - recordStartDate
+    if Td > quizDuration:  # case 1: Td > d -> timerDuration = d
+        timerDuration = quizDuration
+    elif Td < quizDuration: # case 2: Td < d -> timerDuration = Td
+        timerDuration = Td 
+    elif Td == quizDuration: # case 3: Td == d -> timerDuration = d
+        timerDuration = quizDuration
+    
+    recordEndDate = recordStartDate + timerDuration
+    
+    if recordEndDate < datetime.now(tz=recordEndDate.tzinfo):
+        return None
+
+    return int(timerDuration.total_seconds())
