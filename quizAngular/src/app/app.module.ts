@@ -24,6 +24,8 @@ import { ManageQuizComponent } from './manage-quiz/manage-quiz.component';
 import { EditQuizComponent } from './edit-quiz/edit-quiz.component';
 import { InviteUsersComponent } from './invite-users/invite-users.component';
 import { ResultComponent } from './result/result.component';
+import { ResultsComponent } from './results/results.component';
+import { IndexComponent } from './index/index.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +42,9 @@ import { ResultComponent } from './result/result.component';
     ManageQuizComponent,
     EditQuizComponent,
     InviteUsersComponent,
-    ResultComponent
+    ResultComponent,
+    ResultsComponent,
+    IndexComponent
   ],
   imports: [
     BrowserModule,
@@ -50,6 +54,10 @@ import { ResultComponent } from './result/result.component';
     ReactiveFormsModule,
     CountdownModule,
     RouterModule.forRoot([
+      {
+        path: '',
+        component: IndexComponent
+      },
       {
         path: 'login',
         component: LoginComponent
@@ -78,6 +86,11 @@ import { ResultComponent } from './result/result.component';
       {
         path: 'result',
         component: ResultComponent,
+        canActivate: [AuthGuard, AdminAuthGuard]
+      },
+      {
+        path: 'results',
+        component: ResultsComponent,
         canActivate: [AuthGuard, AdminAuthGuard]
       },
       {
