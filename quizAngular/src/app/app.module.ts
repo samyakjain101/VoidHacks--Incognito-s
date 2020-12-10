@@ -76,6 +76,11 @@ import { ResultComponent } from './result/result.component';
         canActivate: [AuthGuard, AdminAuthGuard]
       },
       {
+        path: 'result',
+        component: ResultComponent,
+        canActivate: [AuthGuard, AdminAuthGuard]
+      },
+      {
         path: 'admin',
         component: AdminComponent,
         canActivate: [AuthGuard, AdminAuthGuard]
