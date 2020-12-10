@@ -77,7 +77,9 @@ def create_answer_view(request):
 
 @api_view(['GET'])
 def get_all_ques(request):
-    Quuid = request.GET.get("quiz_id")
+    # Quuid = request.GET.get("quiz_id")
+    data = JSONParser().parse(request)
+    Quuid = data['quiz_id']
 
     try:
         quiz_id = uuid.UUID(Quuid).hex
@@ -141,7 +143,6 @@ def get_all_ques(request):
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
 from knox.auth import TokenAuthentication
 
 class AttempQuiz(APIView):
