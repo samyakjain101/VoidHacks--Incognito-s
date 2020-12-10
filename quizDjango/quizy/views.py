@@ -83,7 +83,7 @@ def create_answer_view(request):
         serializer = QuizSerializer(quizzes, many=True)
         return Response(serializer.data)
 
-class IsLoggedInView(APIView):
+class GetAllQue(APIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
