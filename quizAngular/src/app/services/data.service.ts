@@ -3,18 +3,23 @@ import { NotFoundError } from './../common/not-found-error';
 import { AppError } from './../common/app-error';
 import { HttpClient } from '@angular/common/http';
 import { throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators'; 
 
 export class DataService {
 
     constructor(private url: string , private http: HttpClient) { }
 
-    getAll() {
-        return this.http.get(this.url)
+    private getHeader(params?: any) {
+        let customHeaders = { Authorization: "Token " + localStorage.getItem("token") };
+        return { headers: customHeaders, params: params };
+    }
+
+    getAll(params?: any) {
+        return this.http.get(this.url, this.getHeader())
             .pipe( catchError(this.handleError) );
     }
     create(resource: any) {
-        return this.http.post(this.url, resource)
+        return this.http.post(this.url, resource, this.getHeader())
             .pipe(
                 catchError(this.handleError)
             );

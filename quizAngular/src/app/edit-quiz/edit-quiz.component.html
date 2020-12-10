@@ -1,7 +1,7 @@
 <div class="container">
   <div class="text-center">
-    <h1 class="m-5">Editing (quiz name)</h1>
-    <button class="btn btn-info m-3 mx-auto text-center">Add more +</button>
+    <h1 class="m-5">Editing ({{quizName}})</h1>
+    <a [routerLink]="['/add-question', quizId, quizName]" class="btn btn-info m-3 mx-auto text-center">Add more +</a>
   </div>
     <table class="table">
       <thead>
@@ -13,11 +13,11 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <th>1</th>
-          <th>What is the name?</th>
-          <th><a href="">Edit</a></th>
-          <th><a href="">Delete</a></th>
+        <tr *ngFor="let question of questions">
+          <th class="row">1</th>
+          <th>{{ question.question }}</th>
+          <th><a>Edit</a></th>
+          <th><a>Delete</a></th>
         </tr>
       </tbody>
     </table>

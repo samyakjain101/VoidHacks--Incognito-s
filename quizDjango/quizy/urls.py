@@ -11,7 +11,7 @@ urlpatterns = [
     path('api/edit-quiz/', GetAllQue.as_view(), name="edit_data"),
 
     #send all user
-    path('api/send-users/', SendUsers.as_view(), name="send_users"),
+    path('api/get-all-users/', SendUsers.as_view(), name="get_all_users"),
 
 
 ]

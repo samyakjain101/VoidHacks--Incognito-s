@@ -1,3 +1,4 @@
+import { EditQuizService } from './../services/edit-quiz.service';
 import { ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 
@@ -8,12 +9,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class EditQuizComponent implements OnInit {
   quizId: any; 
-  constructor(private route: ActivatedRoute) { }
+  quizName: any;
+  questions: any;
+  constructor(
+    private route: ActivatedRoute,
+    private service: EditQuizService) { }
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
-      this.quizId = params['quiz_id'];
-    });
+    this.quizId = this.route.snapshot.params.quizId;
+    this.quizName = this.route.snapshot.params.name;
+    this.service.getAll(this.quizId)
+      .subscribe(questions => this.questions = questions);
   }
 
 }

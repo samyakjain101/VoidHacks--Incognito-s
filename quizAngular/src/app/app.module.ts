@@ -61,7 +61,7 @@ import { EditQuizComponent } from './edit-quiz/edit-quiz.component';
         component: QuizdetailComponent
       },
       {
-        path: 'quiz-questions',
+        path: 'attempt-quiz',
         component: QuizquestionsComponent
       },
       {
@@ -89,13 +89,13 @@ import { EditQuizComponent } from './edit-quiz/edit-quiz.component';
         canActivate: [AuthGuard, AdminAuthGuard]
       },
       {
-        path: 'edit-quiz/:quiz-id',
+        path: 'edit-quiz/:quizId/:name',
         component: EditQuizComponent,
         canActivate: [AuthGuard, AdminAuthGuard]
       },
       {
-        path: 'add-question',
-        component: EditQuizComponent,
+        path: 'add-question/:quizId/:name',
+        component: CreateAnswerComponent,
         canActivate: [AuthGuard, AdminAuthGuard]
       },
     ])
